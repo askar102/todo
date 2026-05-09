@@ -6,10 +6,18 @@ export default function Home() {
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center py-32 px-16  sm:items-start">
 
         {/* Header of main */}
-        <div className="w-full flex justify-center pt-1">
+        <div className="w-full flex justify-between items-center pt-1">
+
+          {/* Title */}
           <h1 className="text-2xl text-gray-500">
             The todo list
           </h1>
+
+          {/* 'New task' button */}
+          <div className="">
+            New task
+          </div>
+
         </div>
 
         {/* To-do list container */}
