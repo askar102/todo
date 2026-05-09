@@ -1,0 +1,15 @@
+export default function Header() {
+    return (
+        <div className="w-full flex justify-between items-center pt-1">
+            {/* Title */}
+            <h1 className="text-2xl text-gray-500">
+                The todo list
+            </h1>
+
+            {/* 'New task' button */}
+            <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
+                New task
+            </button>
+        </div>
+    );
+}
