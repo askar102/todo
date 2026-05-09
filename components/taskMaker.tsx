@@ -1,6 +1,6 @@
 import Header from "./header"
 
-export default function TaskMaker() {
+export default function TaskMaker({ onClose }) {
     return (
         /* Transparent background */
         <div className="fixed inset-0 flex items-center justify-center bg-black/40">
@@ -14,7 +14,7 @@ export default function TaskMaker() {
                     </div>
 
                     {/* Close button */}
-                    <button>
+                    <button onClick={onClose}>
                         <img src="/close.svg" alt="close" className="" />
                     </button>
                     

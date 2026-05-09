@@ -14,7 +14,7 @@ export default function Home() {
                 <Header onNewTask={() => setOpen(true)}/>
                 <TodoContainer />
 
-                {open && <TaskMaker />}
+                {open && <TaskMaker onClose={() => setOpen(false)} />}
 
             </main>
         </div>
