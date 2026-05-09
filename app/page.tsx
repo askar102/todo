@@ -14,9 +14,9 @@ export default function Home() {
           </h1>
 
           {/* 'New task' button */}
-          <div className="">
+          <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
             New task
-          </div>
+          </button>
 
         </div>
 
