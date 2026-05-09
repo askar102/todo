@@ -7,11 +7,17 @@ export default function TaskMaker() {
             { /* Pop-up */ }
             <div className="flex flex-col justify-start w-[400px] h-[400px] bg-[rgb(224,224,220)] rounded border-2 border-gray-500">
                 {/* Header */}
-                <div className="w-full flex justify-start">
+                <div className="w-full flex justify-between">
                     {/* Title */}
                     <div className="text-base text-gray-500 px-2">
                         Make a task
                     </div>
+
+                    {/* Close button */}
+                    <button>
+                        <img src="/close.svg" alt="close" className="" />
+                    </button>
+                    
                 </div>
 
                 {/* Body */}
@@ -41,7 +47,16 @@ export default function TaskMaker() {
 
                     </div>
 
-                </div>
+
+                    {/* Control area */}
+                    <div className="w-full flex flex-row  justify-end mt-auto pb-2">
+                        {/* Save button */}
+                        <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
+                            Save
+                        </button>
+                    </div>  
+
+                </div> 
 
             </div>
         </div>  
