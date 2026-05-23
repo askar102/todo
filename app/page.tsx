@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/header";
 import TaskContainer from "@/components/taskContainer";
 import TaskMaker from "@/components/taskMaker";
@@ -52,6 +52,33 @@ export default function Home() {
         setEditingTask(null);
     };
 
+    async function createTask(data: Omit<Task, "id">) {
+        const response = await fetch("/api/tasks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const createdTask: Task = await response.json();
+
+        setTasks((prev) => [createdTask, ...prev]);
+
+        setIsTaskMakerOpen(false);
+    }
+
+    useEffect(() => {
+        async function loadTasks() {
+            const response = await fetch("/api/tasks");
+            const tasksFromDb: Task[] = await response.json();
+
+            setTasks(tasksFromDb);
+        }
+
+        loadTasks();
+    }, []);
+
     // Remove task by id
     const removeTask = (id: string) => {
         setTasks((prev) => prev.filter((task) => task.id !== id));
@@ -101,7 +128,7 @@ export default function Home() {
                             setIsTaskMakerOpen(false);
                             setEditingTask(null);
                         }}
-                        onSave={saveTask}
+                        onSave={createTask}
                     />
                 )}
             </main>
