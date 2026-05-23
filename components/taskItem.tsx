@@ -8,7 +8,7 @@ type TaskItemProp = {
 
 export default function TaskItem({ task }: TaskItemProp) {
     return (
-        <div className="bg-red-600">
+        <div className="py-4 px-6  bg-red-600">
             <h2>{task.title}</h2>
             <p>{task.description}</p>
         </div>
