@@ -1,6 +1,27 @@
-import Header from "./header"
+import { useState } from "react";
 
-export default function TaskMaker({ onClose }) {
+import Header from "./header"
+import type { Task } from "@/types/task";
+
+type TaskMakerProps = {
+    onClose: () => void;
+    onNewTask: (task: Task) => void;
+};
+
+export default function TaskMaker({ onClose, onNewTask }: TaskMakerProps) {
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+
+    {/* Save button logic */}
+    const handleSave = () => {
+        onNewTask({
+            title,
+            description
+        });
+
+        onClose();
+    };
+
     return (
         /* Transparent background */
         <div className="fixed inset-0 flex items-center justify-center bg-black/40">
@@ -30,7 +51,12 @@ export default function TaskMaker({ onClose }) {
                         </div>
 
                         {/* Input */}
-                        <input type="text" placeholder="Enter here" className="border-0 border-b border-gray-500 focus:outline-none text-gray-500" />
+                        <input type="text" 
+                                placeholder="Enter here" 
+                                className="border-0 border-b border-gray-500 focus:outline-none text-gray-500"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                />
                         
                     </div>
 
@@ -43,7 +69,12 @@ export default function TaskMaker({ onClose }) {
                         </div>
 
                         {/* Input */}
-                        <textarea maxLength={300} placeholder="Enter here" className="h-40 resize-none border-0 border-b border-gray-500 focus:outline-none text-gray-500" />
+                        <textarea maxLength={300} 
+                                    placeholder="Enter here" 
+                                    className="h-40 resize-none border-0 border-b border-gray-500 focus:outline-none text-gray-500" 
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    />
 
                     </div>
 
@@ -51,7 +82,7 @@ export default function TaskMaker({ onClose }) {
                     {/* Control area */}
                     <div className="w-full flex flex-row  justify-end mt-auto pb-2">
                         {/* Save button */}
-                        <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
+                        <button onClick={handleSave} className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
                             Save
                         </button>
                     </div>  
