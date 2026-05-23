@@ -12,7 +12,7 @@ export default function Home() {
 
     const [tasks, setTasks] = useState<Task[]>([]);
 
-    function createNewTask(task: Task) {
+    const createNewTask = (task: Task) => {
         setTasks((prevTasks) => [...prevTasks, task]);
     }
 
