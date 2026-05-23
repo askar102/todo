@@ -14,8 +14,10 @@ export default function TaskMaker({ onClose, onNewTask }: TaskMakerProps) {
     {/* Save button logic */}
     const handleSave = () => {
         onNewTask({
+            id: crypto.randomUUID(),
             title,
-            description
+            description,
+            status: "active"
         });
 
         onClose();
