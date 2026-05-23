@@ -29,16 +29,17 @@ export default function Home() {
         if (editingTask) {
             setTasks((prev) =>
                 prev.map((task) =>
-                    task.id === editingTask.id ? { ...editingTask, ...data } : task
+                    task.id === editingTask.id
+                        ? { ...editingTask, ...data }
+                        : task
                 )
             );
-        }
-        else {
+        } else {
             setTasks((prev) => [
                 ...prev,
                 {
                     id: crypto.randomUUID(),
-                    ...data
+                    ...data,
                 },
             ]);
         }
@@ -48,8 +49,8 @@ export default function Home() {
     };
 
     const markAsDone = (id: string) => {
-        setTasks(prev =>
-            prev.map(task =>
+        setTasks((prev) =>
+            prev.map((task) =>
                 task.id === id ? { ...task, status: "done" } : task
             )
         );
@@ -57,18 +58,15 @@ export default function Home() {
         console.log("Task %s marked as 'Done'", id);
     };
 
-
     const removeTask = (id: string) => {
-        setTasks(prev =>
-            prev.filter(task => task.id !== id)
-        );
+        setTasks((prev) => prev.filter((task) => task.id !== id));
 
         console.log("Task %s was removed", id);
     };
 
     const markAsActive = (id: string) => {
-        setTasks(prev =>
-            prev.map(task =>
+        setTasks((prev) =>
+            prev.map((task) =>
                 task.id === id ? { ...task, status: "active" } : task
             )
         );
@@ -79,23 +77,25 @@ export default function Home() {
     return (
         <div className="flex flex-col flex-1 items-center bg-[rgb(224,224,224)]  font-sans">
             <main className="flex flex-1 w-full max-w-3xl flex-col items-center py-32 px-16  sm:items-start">
-                <Header onNewTaskButton={openCreateTask}/>
-                <TodoContainer 
-                    tasks={tasks} 
+                <Header onNewTaskButton={openCreateTask} />
+                <TodoContainer
+                    tasks={tasks}
                     onDone={markAsDone}
                     onRemove={removeTask}
                     onEdit={openEditTask}
                     onBack={markAsActive}
                 />
 
-                {open && <TaskMaker task={editingTask} 
-                                    onClose={() => {
-                                        setOpen(false);
-                                        setEditingTask(null);
-                                    }}
-                                    onSave={saveTask}
-                />}
-
+                {open && (
+                    <TaskMaker
+                        task={editingTask}
+                        onClose={() => {
+                            setOpen(false);
+                            setEditingTask(null);
+                        }}
+                        onSave={saveTask}
+                    />
+                )}
             </main>
         </div>
     );

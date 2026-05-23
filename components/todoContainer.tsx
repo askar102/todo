@@ -16,11 +16,13 @@ export default function TodoContainer({ tasks, onDone, onRemove, onEdit, onBack 
     return (
         <div className="w-full border border-gray-500 bg-[rgb(224,224,220)] flex flex-col divide-y divide-gray-400">
             {tasks.map((task) => (
-                <TaskItem key={task.id} task={task} 
-                onDone={onDone}
-                onRemove={onRemove}
-                onEdit={() => onEdit(task)}
-                onBack={onBack}
+                <TaskItem
+                    key={task.id}
+                    task={task}
+                    onDone={onDone}
+                    onRemove={onRemove}
+                    onEdit={() => onEdit(task)}
+                    onBack={onBack}
                 />
             ))}
         </div>
