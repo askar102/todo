@@ -64,7 +64,17 @@ export default function Home() {
         );
 
         console.log("Task %s was removed", id);
-    }
+    };
+
+    const markAsActive = (id: string) => {
+        setTasks(prev =>
+            prev.map(task =>
+                task.id === id ? { ...task, status: "active" } : task
+            )
+        );
+
+        console.log("Task %s marked as 'Active'", id);
+    };
 
     return (
         <div className="flex flex-col flex-1 items-center bg-[rgb(224,224,224)]  font-sans">
@@ -75,6 +85,7 @@ export default function Home() {
                     onDone={markAsDone}
                     onRemove={removeTask}
                     onEdit={openEditTask}
+                    onBack={markAsActive}
                 />
 
                 {open && <TaskMaker task={editingTask} 

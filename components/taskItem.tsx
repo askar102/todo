@@ -7,9 +7,10 @@ type TaskItemProp = {
     onDone: (id: string) => void;
     onRemove: (id: string) => void;
     onEdit: () => void;
+    onBack: (id: string) => void;
 };
 
-export default function TaskItem({ task, onDone, onRemove, onEdit }: TaskItemProp) {
+export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: TaskItemProp) {
 
     const getTaskInformation = () => {
         if (task.status === "active") {
@@ -39,6 +40,35 @@ export default function TaskItem({ task, onDone, onRemove, onEdit }: TaskItemPro
             );
         }
     };
+    
+    const getTaskDoneButton = () => {
+        if (task.status === "active") {
+            return (
+                <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500"
+                        onClick={() => onDone(task.id)}>
+                    Done
+                </button>
+            );
+        }
+
+
+        if (task.status === "done") {
+            return (
+                <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500"
+                        onClick={() => onBack(task.id)}>
+                    Active
+                </button>
+            );
+        }
+
+        // if (task.status === "archived") {
+        //     return (
+        //         <div>
+        //             TODO: stub
+        //         </div>
+        //     );
+        // }
+    };
 
 
     return (
@@ -51,10 +81,7 @@ export default function TaskItem({ task, onDone, onRemove, onEdit }: TaskItemPro
             {/* Right side */}
             <div className="flex flex-col">
                 {/* Mark as done button */}
-                <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500"
-                        onClick={() => onDone(task.id)}>
-                    Done
-                </button>
+                {getTaskDoneButton()}
 
                 {/* Remove button */}
                 <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500"
