@@ -6,7 +6,7 @@ type TaskItemProp = {
     task: Task;
     onDone: (id: string) => void;
     onRemove: (id: string) => void;
-    onEdit: (id: string) => void;
+    onEdit: () => void;
 };
 
 export default function TaskItem({ task, onDone, onRemove, onEdit }: TaskItemProp) {
@@ -64,7 +64,7 @@ export default function TaskItem({ task, onDone, onRemove, onEdit }: TaskItemPro
 
                 {/* Edit button */}
                 <button className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500"
-                        onClick={() => onEdit(task.id)}>
+                        onClick={onEdit}>
                     Edit
                 </button>
             </div>

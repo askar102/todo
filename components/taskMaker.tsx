@@ -3,24 +3,26 @@ import { useState } from "react";
 import type { Task } from "@/types/task";
 
 type TaskMakerProps = {
+    task: Task | null
     onClose: () => void;
-    onNewTask: (task: Task) => void;
+    onSave: (data: Omit<Task, "id">) => void;
 };
 
-export default function TaskMaker({ onClose, onNewTask }: TaskMakerProps) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+export default function TaskMaker({ task, onClose, onSave }: TaskMakerProps) {
+    // can get Null:
+    // get title if is not Null (?.)
+    // if left Null when "" (??)
+    const [title, setTitle] = useState(task?.title ?? "");
+    const [description, setDescription] = useState(task?.description ?? "");
+    const [status, setStatus] = useState(task?.status ?? "active");
 
     {/* Save button logic */}
     const handleSave = () => {
-        onNewTask({
-            id: crypto.randomUUID(),
+        onSave({
             title,
             description,
-            status: "active"
+            status
         });
-
-        onClose();
     };
 
     return (

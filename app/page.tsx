@@ -8,13 +8,44 @@ import TaskMaker from "@/components/taskMaker";
 import type { Task } from "@/types/task";
 
 export default function Home() {
+    // Is TaskMaker open?
     const [open, setOpen] = useState(false);
-
+    // Tasks list
     const [tasks, setTasks] = useState<Task[]>([]);
+    // What task are we editing?
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-    const createNewTask = (task: Task) => {
-        setTasks((prevTasks) => [...prevTasks, task]);
-    }
+    const openCreateTask = () => {
+        setEditingTask(null);
+        setOpen(true);
+    };
+
+    const openEditTask = (task: Task) => {
+        setEditingTask(task);
+        setOpen(true);
+    };
+
+    const saveTask = (data: Omit<Task, "id">) => {
+        if (editingTask) {
+            setTasks((prev) =>
+                prev.map((task) =>
+                    task.id === editingTask.id ? { ...editingTask, ...data } : task
+                )
+            );
+        }
+        else {
+            setTasks((prev) => [
+                ...prev,
+                {
+                    id: crypto.randomUUID(),
+                    ...data
+                },
+            ]);
+        }
+
+        setOpen(false);
+        setEditingTask(null);
+    };
 
     const markAsDone = (id: string) => {
         setTasks(prev =>
@@ -38,14 +69,21 @@ export default function Home() {
     return (
         <div className="flex flex-col flex-1 items-center bg-[rgb(224,224,224)]  font-sans">
             <main className="flex flex-1 w-full max-w-3xl flex-col items-center py-32 px-16  sm:items-start">
-                <Header onNewTaskButton={() => setOpen(true)}/>
+                <Header onNewTaskButton={openCreateTask}/>
                 <TodoContainer 
                     tasks={tasks} 
                     onDone={markAsDone}
                     onRemove={removeTask}
+                    onEdit={openEditTask}
                 />
 
-                {open && <TaskMaker onClose={() => setOpen(false)} onNewTask={createNewTask} />}
+                {open && <TaskMaker task={editingTask} 
+                                    onClose={() => {
+                                        setOpen(false);
+                                        setEditingTask(null);
+                                    }}
+                                    onSave={saveTask}
+                />}
 
             </main>
         </div>
