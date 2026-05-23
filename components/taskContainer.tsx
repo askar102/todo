@@ -4,7 +4,7 @@ import type { Task } from "@/types/task";
 
 import TaskItem from "./taskItem";
 
-type TodoContainerProps = {
+type TaskContainerProps = {
     tasks: Task[];
     onDone: (id: string) => void;
     onRemove: (id: string) => void;
@@ -12,7 +12,7 @@ type TodoContainerProps = {
     onBack: (id: string) => void;
 };
 
-export default function TodoContainer({ tasks, onDone, onRemove, onEdit, onBack }: TodoContainerProps) {
+export default function TaskContainer({ tasks, onDone, onRemove, onEdit, onBack }: TaskContainerProps) {
     return (
         <div className="w-full border border-gray-500 bg-[rgb(224,224,220)] flex flex-col divide-y divide-gray-400">
             {tasks.map((task) => (
