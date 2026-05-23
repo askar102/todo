@@ -10,14 +10,43 @@ type TaskItemProp = {
 };
 
 export default function TaskItem({ task, onDone, onRemove, onEdit }: TaskItemProp) {
+
+    const getTaskInformation = () => {
+        if (task.status === "active") {
+            return (
+                <div>
+                    <h2>{task.title}</h2>
+                    <p>{task.description}</p>
+                </div>
+            );
+        }
+
+
+        if (task.status === "done") {
+            return (
+                <div className="bg-gray-400 opacity-50">
+                    <h2 className="line-through">{task.title}</h2>
+                    <p className="line-through">{task.description}</p>
+                </div>
+            );
+        }
+
+        if (task.status === "archived") {
+            return (
+                <div>
+                    TODO: stub
+                </div>
+            );
+        }
+    };
+
+
     return (
         <div className="py-4 px-6 text-gray-500 flex justify-between items-start">
             {/* Left side */}
             <div>
-                <h2>{task.title}</h2>
-                <p>{task.description}</p>
+                {getTaskInformation()}
             </div>
-
 
             {/* Right side */}
             <div className="flex flex-col">
