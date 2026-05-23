@@ -14,7 +14,6 @@ export default function TodoContainer({ tasks }: TodoContainerProps) {
             {tasks.map((task, index) => (
                 <TaskItem task={task} key={index} />
             ))}
-
         </div>
     );
 }

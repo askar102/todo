@@ -1,7 +1,10 @@
 import { useState } from "react";
 
+type HeaderProps = {
+    onNewTaskButton: () => void;
+};
 
-export default function Header({ onNewTaskButton }) {
+export default function Header({ onNewTaskButton }: HeaderProps) {
     return (
         <div className="w-full flex justify-between items-center pt-1">
             {/* Title */}
@@ -10,7 +13,8 @@ export default function Header({ onNewTaskButton }) {
             </h1>
 
             {/* 'New task' button */}
-            <button onClick={onNewTaskButton} className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
+            <button onClick={onNewTaskButton} 
+                    className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500">
                 New task
             </button>
         </div>
