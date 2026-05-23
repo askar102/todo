@@ -25,7 +25,7 @@ export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: Tas
 
         if (task.status === "done") {
             return (
-                <div className="bg-gray-400 opacity-50">
+                <div className="">
                     <h2 className="line-through">{task.title}</h2>
                     <p className="line-through">{task.description}</p>
                 </div>
@@ -70,9 +70,18 @@ export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: Tas
         // }
     };
 
+    const getBgClass = () => {
+        if (task.status === "done") 
+            return "opacity-50";
+        // if (task.status === "archived") return "bg-yellow-100";
+
+
+        return "bg-[rgb(224,224,220)]";
+    }
+
 
     return (
-        <div className="py-4 px-6 text-gray-500 flex justify-between items-start">
+        <div className={`py-4 px-6 text-gray-500 flex justify-between items-start ${getBgClass()}`}>
             {/* Left side */}
             <div>
                 {getTaskInformation()}
