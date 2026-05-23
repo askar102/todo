@@ -1,16 +1,18 @@
-import { useState } from "react";
-
 import type { Task } from "@/types/task";
 
 type TaskItemProp = {
     task: Task;
+    // Status
     onDone: (id: string) => void;
+    onActive: (id: string) => void;
+    // Control
     onRemove: (id: string) => void;
     onEdit: () => void;
-    onBack: (id: string) => void;
 };
 
-export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: TaskItemProp) {
+export default function TaskItem({ task, onDone, onActive , onRemove, onEdit }: TaskItemProp) {
+    
+    // Get title, description
     const getTaskInformation = () => {
         if (task.status === "active") {
             return (
@@ -35,6 +37,7 @@ export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: Tas
         }
     };
 
+    // Get button status
     const getStatusButton = () => {
         if (task.status === "active") {
             return (
@@ -51,7 +54,7 @@ export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: Tas
             return (
                 <button
                     className="px-5 py-1 border border-gray-500 rounded text-xs text-gray-500"
-                    onClick={() => onBack(task.id)}
+                    onClick={() => onActive(task.id)}
                 >
                     Active
                 </button>
@@ -67,6 +70,7 @@ export default function TaskItem({ task, onDone, onRemove, onEdit, onBack }: Tas
         // }
     };
 
+    // Get background of task
     const getBgClass = () => {
         if (task.status === "done") return "opacity-50";
         // if (task.status === "archived") return "bg-yellow-100";

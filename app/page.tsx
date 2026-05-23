@@ -91,7 +91,7 @@ export default function Home() {
                     onDone={markAsDone}
                     onRemove={removeTask}
                     onEdit={openEditTask}
-                    onBack={markAsActive}
+                    onActive={markAsActive}
                 />
 
                 {isTaskMakerOpen && (
