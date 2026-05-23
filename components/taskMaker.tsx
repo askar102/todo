@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import Header from "./header"
 import type { Task } from "@/types/task";
 
 type TaskMakerProps = {
