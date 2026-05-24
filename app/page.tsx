@@ -68,6 +68,23 @@ export default function Home() {
         setIsTaskMakerOpen(false);
     }
 
+    async function deleteTask(id: string) {
+        const response = await fetch("/api/tasks", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id })
+        });
+
+        if (!response.ok) {
+            console.error("Failed to delete task", id);
+            return;
+        }
+        
+        removeTaskLocal(id);
+    }
+
     useEffect(() => {
         async function loadTasks() {
             const response = await fetch("/api/tasks");
@@ -80,7 +97,7 @@ export default function Home() {
     }, []);
 
     // Remove task by id
-    const removeTask = (id: string) => {
+    const removeTaskLocal = (id: string) => {
         setTasks((prev) => prev.filter((task) => task.id !== id));
 
         console.log("Task %s was removed", id);
@@ -116,7 +133,7 @@ export default function Home() {
                 <TaskContainer
                     tasks={tasks}
                     onDone={markAsDone}
-                    onRemove={removeTask}
+                    onRemove={deleteTask}
                     onEdit={openEditTask}
                     onActive={markAsActive}
                 />
