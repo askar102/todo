@@ -1,6 +1,6 @@
 import type { Task } from "@/types/task";
 
-import TaskItem from "./taskItem";
+import TaskItem from "@/components/taskItem";
 
 type TaskContainerProps = {
     tasks: Task[];
