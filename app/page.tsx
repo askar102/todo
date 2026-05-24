@@ -89,20 +89,19 @@ export default function Home() {
         const task = tasks.find(t => t.id === id);
         if (!task) return;
         
-        // server
-        const updated = await updateTask(id, {
-            ...task,
-            status: "done",
-        });
+        try 
+        {
+            // server
+            const updated = await updateTask(id, {...task, status: "done" });
+            // client
+            setTasks((prev) => prev.map((t) => t.id === id ? updated : t ));
 
-        // client
-        setTasks((prev) =>
-            prev.map((t) =>
-                t.id === id ? updated : t
-            )
-        );
-    
-        console.log("Task %s marked as 'Done'", id);
+            console.log("Task %s marked as 'Done'", id);
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
     };
 
     // Change task status to "Active" by id
@@ -110,20 +109,21 @@ export default function Home() {
         const task = tasks.find(t => t.id === id);
         if (!task) return;
 
-        // server
-        await updateTask(id, {
-            ...task,
-            status: "active"
-        });
+        try 
+        {
+            // server
+            const updated = await updateTask(id, {...task, status: "active" });
+            // client
+            setTasks((prev) => prev.map((t) => t.id === id ? updated : t ));
 
-        // client 
-        setTasks((prev) =>
-            prev.map((t) =>
-                t.id === id ? { ...t, status: "done" } : t
-            )
-        );
+            console.log("Task %s marked as 'Active'", id);
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
 
-        console.log("Task %s marked as 'Active'", id);
+        
     };
 
     // Main component
