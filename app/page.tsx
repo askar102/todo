@@ -6,6 +6,7 @@ import TaskContainer from "@/components/taskContainer";
 import TaskMaker from "@/components/taskMaker";
 
 import type { Task } from "@/types/task";
+import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export default function Home() {
     // Is TaskMaker open?
@@ -61,8 +62,7 @@ export default function Home() {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ id })
+            }
         });
 
         if (!response.ok) {
@@ -99,13 +99,24 @@ export default function Home() {
 
     useEffect(() => {
         async function loadTasks() {
-            const response = await fetch("/api/tasks");
-            const tasksFromDb: Task[] = await response.json();
-
-            setTasks(tasksFromDb);
+            try {
+                const response = await fetch("/api/tasks");
+    
+                if (!response.ok) {
+                    throw new Error("Failed to load tasks from server");
+                }
+    
+                const tasksFromDb: Task[] = await response.json();
+    
+                setTasks(tasksFromDb);
+            } 
+            catch (err) {
+                console.error(err);
+            }
         }
 
         loadTasks();
+        
     }, []);
 
     // Remove task by id
@@ -120,16 +131,10 @@ export default function Home() {
         const task = tasks.find(t => t.id === id);
         if (!task) return;
         
-        // For backend
         const updated = await updateTask(id, {
             ...task,
             status: "done",
         });
-        
-        // For client
-        setTasks((prev) =>
-            prev.map((t) => (t.id === id ? updated : t))
-        );
     
         console.log("Task %s marked as 'Done'", id);
     };
@@ -143,10 +148,6 @@ export default function Home() {
             ...task,
             status: "active"
         });
-
-        setTasks((prev) =>
-            prev.map((t) => (t.id === id ? updated : t))
-        );
 
         console.log("Task %s marked as 'Active'", id);
     };
