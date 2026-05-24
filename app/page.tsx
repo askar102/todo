@@ -148,7 +148,7 @@ export default function Home() {
             prev.map((t) => (t.id === id ? updated : t))
         );
 
-        console.log("Task %s marked as 'Done'", id);
+        console.log("Task %s marked as 'Active'", id);
     };
 
     // Main component

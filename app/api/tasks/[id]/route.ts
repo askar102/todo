@@ -38,7 +38,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 export async function DELETE(request: Request, { params }: RouteContext) {
     try {
         const body = await request.json();
-        const id = body.id;
+        const { id } = await params;
 
         const result = await db.query(
             `
