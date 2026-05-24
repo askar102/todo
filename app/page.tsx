@@ -57,7 +57,7 @@ export default function Home() {
     }
 
     async function deleteTask(id: string) {
-        const response = await fetch("/api/tasks", {
+        const response = await fetch(`/api/tasks/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

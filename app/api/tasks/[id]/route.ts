@@ -34,3 +34,27 @@ export async function PATCH(request: Request, { params }: RouteContext) {
         return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }
+
+export async function DELETE(request: Request, { params }: RouteContext) {
+    try {
+        const body = await request.json();
+        const id = body.id;
+
+        const result = await db.query(
+            `
+            DELETE FROM tasks WHERE id = $1
+            RETURNING *
+            `,
+            [id]
+        );
+
+        if (result.rowCount === 0) {
+            return Response.json({ error: "Task not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(result.rows[0]);
+    }
+    catch {
+        return NextResponse.json({ error: "Server error" }, { status: 500 });
+    }
+}
