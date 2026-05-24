@@ -35,9 +35,8 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     }
 }
 
-export async function DELETE(request: Request, { params }: RouteContext) {
+export async function DELETE(_request: Request, { params }: RouteContext) {
     try {
-        const body = await request.json();
         const { id } = await params;
 
         const result = await db.query(
@@ -49,7 +48,7 @@ export async function DELETE(request: Request, { params }: RouteContext) {
         );
 
         if (result.rowCount === 0) {
-            return Response.json({ error: "Task not found" }, { status: 404 });
+            return NextResponse.json({ error: "Task not found" }, { status: 404 });
         }
 
         return NextResponse.json(result.rows[0]);

@@ -5,8 +5,9 @@ import Header from "@/components/header";
 import TaskContainer from "@/components/taskContainer";
 import TaskMaker from "@/components/taskMaker";
 
+import { createTask, deleteTask, updateTask, fetchTasks } from "@/lib/taskApi";
+
 import type { Task } from "@/types/task";
-import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export default function Home() {
     // Is TaskMaker open?
@@ -28,85 +29,33 @@ export default function Home() {
         setIsTaskMakerOpen(true);
     };
 
-
     // TaskMaker save handle
     const saveTask = async (data: Omit<Task, "id">) => {
-        if (editingTask) {
-            await updateTask(editingTask.id, data)
-        } else {
-            await createTask(data);
+        try 
+        {
+            if (editingTask) {
+                const updated = await updateTask(editingTask.id, data);
+                setTasks((prev) => prev.map((t) => (t.id === editingTask.id ? updated : t)));
+            } else {
+                const created = await createTask(data);
+                setTasks((prev) => [created, ...prev]);
+            }
         }
-
+        catch(err)
+        {
+            console.error(err);
+        }
+        
         setIsTaskMakerOpen(false);
         setEditingTask(null);
     };
 
-    async function createTask(data: Omit<Task, "id">) {
-        const response = await fetch("/api/tasks", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const createdTask: Task = await response.json();
-
-        setTasks((prev) => [createdTask, ...prev]);
-
-        setIsTaskMakerOpen(false);
-    }
-
-    async function deleteTask(id: string) {
-        const response = await fetch(`/api/tasks/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (!response.ok) {
-            console.error("Failed to delete task", id);
-            return;
-        }
-        
-        removeTaskLocal(id);
-    }
-
-    async function updateTask(id: string, data: Omit<Task, "id">) {
-        const response = await fetch(`/api/tasks/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to update task");
-        }
-
-        const updatedTask: Task = await response.json();
-
-        setTasks((prev) =>
-            prev.map((task) =>
-                task.id === id ? updatedTask : task
-            )
-        );
-
-        return updatedTask;
-    }
 
     useEffect(() => {
-        async function loadTasks() {
+        async function loadTasks() 
+        {
             try {
-                const response = await fetch("/api/tasks");
-    
-                if (!response.ok) {
-                    throw new Error("Failed to load tasks from server");
-                }
-    
-                const tasksFromDb: Task[] = await response.json();
+                const tasksFromDb: Task[] = await fetchTasks();
     
                 setTasks(tasksFromDb);
             } 
@@ -120,10 +69,19 @@ export default function Home() {
     }, []);
 
     // Remove task by id
-    const removeTaskLocal = (id: string) => {
-        setTasks((prev) => prev.filter((task) => task.id !== id));
+    const removeTask = async (id: string) => {
+        try
+        {
+            await deleteTask(id);
+            // filter - оставляет только те элементы которые проходят условие 
+            setTasks((prev) => prev.filter((task) => task.id !== id));
 
-        console.log("Task %s was removed", id);
+            console.log("Task %s was removed", id);
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
     };
 
     // Change task status to "Done" by id
@@ -131,10 +89,18 @@ export default function Home() {
         const task = tasks.find(t => t.id === id);
         if (!task) return;
         
+        // server
         const updated = await updateTask(id, {
             ...task,
             status: "done",
         });
+
+        // client
+        setTasks((prev) =>
+            prev.map((t) =>
+                t.id === id ? updated : t
+            )
+        );
     
         console.log("Task %s marked as 'Done'", id);
     };
@@ -144,10 +110,18 @@ export default function Home() {
         const task = tasks.find(t => t.id === id);
         if (!task) return;
 
-        const updated = await updateTask(id, {
+        // server
+        await updateTask(id, {
             ...task,
             status: "active"
         });
+
+        // client 
+        setTasks((prev) =>
+            prev.map((t) =>
+                t.id === id ? { ...t, status: "done" } : t
+            )
+        );
 
         console.log("Task %s marked as 'Active'", id);
     };
@@ -160,7 +134,7 @@ export default function Home() {
                 <TaskContainer
                     tasks={tasks}
                     onDone={markAsDone}
-                    onRemove={deleteTask}
+                    onRemove={removeTask}
                     onEdit={openEditTask}
                     onActive={markAsActive}
                 />
