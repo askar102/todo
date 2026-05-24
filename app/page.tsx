@@ -29,23 +29,11 @@ export default function Home() {
 
 
     // TaskMaker save handle
-    const saveTask = (data: Omit<Task, "id">) => {
+    const saveTask = async (data: Omit<Task, "id">) => {
         if (editingTask) {
-            setTasks((prev) =>
-                prev.map((task) =>
-                    task.id === editingTask.id
-                        ? { ...editingTask, ...data }
-                        : task
-                )
-            );
+            await updateTask(editingTask.id, data)
         } else {
-            setTasks((prev) => [
-                ...prev,
-                {
-                    id: crypto.randomUUID(),
-                    ...data,
-                },
-            ]);
+            await createTask(data);
         }
 
         setIsTaskMakerOpen(false);
@@ -85,6 +73,30 @@ export default function Home() {
         removeTaskLocal(id);
     }
 
+    async function updateTask(id: string, data: Omit<Task, "id">) {
+        const response = await fetch(`/api/tasks/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update task");
+        }
+
+        const updatedTask: Task = await response.json();
+
+        setTasks((prev) =>
+            prev.map((task) =>
+                task.id === id ? updatedTask : task
+            )
+        );
+
+        return updatedTask;
+    }
+
     useEffect(() => {
         async function loadTasks() {
             const response = await fetch("/api/tasks");
@@ -104,25 +116,39 @@ export default function Home() {
     };
 
     // Change task status to "Done" by id
-    const markAsDone = (id: string) => {
+    const markAsDone = async (id: string) => {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+        
+        // For backend
+        const updated = await updateTask(id, {
+            ...task,
+            status: "done",
+        });
+        
+        // For client
         setTasks((prev) =>
-            prev.map((task) =>
-                task.id === id ? { ...task, status: "done" } : task
-            )
+            prev.map((t) => (t.id === id ? updated : t))
         );
-
+    
         console.log("Task %s marked as 'Done'", id);
     };
 
     // Change task status to "Active" by id
-    const markAsActive = (id: string) => {
+    const markAsActive = async (id: string) => {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+
+        const updated = await updateTask(id, {
+            ...task,
+            status: "active"
+        });
+
         setTasks((prev) =>
-            prev.map((task) =>
-                task.id === id ? { ...task, status: "active" } : task
-            )
+            prev.map((t) => (t.id === id ? updated : t))
         );
 
-        console.log("Task %s marked as 'Active'", id);
+        console.log("Task %s marked as 'Done'", id);
     };
 
     // Main component
@@ -145,7 +171,7 @@ export default function Home() {
                             setIsTaskMakerOpen(false);
                             setEditingTask(null);
                         }}
-                        onSave={createTask}
+                        onSave={saveTask}
                     />
                 )}
             </main>
